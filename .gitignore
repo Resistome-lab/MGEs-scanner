@@ -1,0 +1,12 @@
+# Output directories
+mge_scanner_output/
+*.log
+*.tbl
+*.tsv
+*.faa
+*.gff
+
+# Python cache
+__pycache__/
+*.pyc
+.DS_Store
