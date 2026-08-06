@@ -18,11 +18,10 @@ def scan_contigs(fasta_path, evalue_cutoff=1e-5):
     if not os.path.exists(db_path):
         raise FileNotFoundError(f"HMM database not found at {db_path}")
 
-    # Step 1: Predict ORFs using Pyrodigal
-    orf_finder = pyrodigal.OrfFinder()
+    gene_finder = pyrodigal.GeneFinder()
     records = []
-    
-    # Simple FASTA parser
+
+    # Read FASTA records
     with open(fasta_path, "r") as f:
         current_header = None
         current_seq = []
@@ -39,30 +38,41 @@ def scan_contigs(fasta_path, evalue_cutoff=1e-5):
             records.append((current_header, "".join(current_seq)))
 
     results = []
-    
-    # Step 2: HMM Scanning with PyHMMER
+
+    # Load pre-pressed HMM database
     with pyhmmer.plan7.HMMFile(db_path) as hmm_file:
         hmms = list(hmm_file)
 
     for contig_id, seq in records:
-        preds = orf_finder.find_genes(seq)
+        seq_bytes = seq.encode("ascii")
+        
+        # Try finding genes using meta mode (ideal for contigs/metagenomes)
+        # Fallback to training on sequence if single contig is sufficiently long
+        try:
+            preds = gene_finder.find_genes(seq_bytes, meta=True)
+        except Exception:
+            try:
+                training_info = gene_finder.train(seq_bytes)
+                preds = gene_finder.find_genes(seq_bytes, training_info)
+            except Exception:
+                preds = []
+
         proteins = [
             pyhmmer.easel.DigitalSequence(
                 pyhmmer.easel.Alphabet.amino(),
-                name=f"{contig_id}_{i+1}".encode(),
-                sequence=pred.translate().encode()
+                name=f"{contig_id}_{i+1}".encode("utf-8"),
+                sequence=pred.translate().encode("utf-8")
             )
             for i, pred in enumerate(preds)
         ]
-        
+
         detected_mges = set()
         if proteins:
             for top_hits in pyhmmer.hmmsearch(hmms, proteins):
                 for hit in top_hits:
                     if hit.evalue <= evalue_cutoff:
-                        detected_mges.add(top_hits.query_name.decode())
+                        detected_mges.add(top_hits.query_name.decode("utf-8"))
 
-        # Step 3: Compute Mobility Risk Score (MRS)
         mge_count = len(detected_mges)
         if mge_count >= 2:
             mrs, tier = 8.5, "HIGH"
