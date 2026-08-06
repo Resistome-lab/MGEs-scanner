@@ -37,8 +37,6 @@ mges-scanner --input contigs.fasta --mge-db MGE_profiles.hmm --plsdb plsdb.dmnd 
 ```
 Note: You can adjust parameters and file paths according to your system environment.
 
-### Step 3: Look for the output files
-
 ## Step 3: Look for the output files
 
 mges-scanner generates a single tab-delimited summary report (.tsv) containing mobility classifications for each analyzed contig:
