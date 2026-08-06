@@ -12,8 +12,8 @@ Mobile Genetic Element Profiler & Mobility Risk Scoring Engine for Genomes and M
 Install `mges-scanner` directly from GitHub using `pip3` in your Linux/WSL environment:
 
 ```bash
-pip3 install git+[https://github.com/Resistome-lab/MGEs-scanner.git](https://github.com/Resistome-lab/MGEs-scanner.git)
-
+pip3 install git+https://github.com/Resistome-lab/MGEs-scanner.git
+```
 ### Step 2: Install Prerequisites
 
 MGEs-scanner requires Prodigal, HMMER, and DIAMOND. Install them via Conda:
@@ -40,18 +40,13 @@ Note: You can adjust parameters and file paths according to your system environm
 
 MGEs-scanner automatically generates results inside your specified output directory (--output-dir):
 
-    MGEs_mobility_summary.tsv: Quantified mobility summary per contig/locus:
+### MGEs_mobility_summary.tsv: 
+Quantified mobility summary per contig/locus:
 
-        Contig_ID: Identifier of the analyzed contig.
-
-        Mobility_Risk_Score: Calculated score from 0.0 to 10.0.
-
-        Risk_Category: Categorized risk level (HIGH, MEDIUM, or LOW).
-
-        Detected_Elements_Count: Total count of distinct MGE features detected.
-
-        MGE_Signatures: Semicolon-delimited list of identified elements.
-
-    predicted_proteins.faa: Translated ORFs extracted by Prodigal.
-
-    hmmer_results.tbl: Tabular output generated directly by HMMER.
+1) Contig_ID: Identifier of the analyzed contig.
+2) Mobility_Risk_Score: Calculated score from 0.0 to 10.0.
+3) Risk_Category: Categorized risk level (HIGH, MEDIUM, or LOW).
+4) Detected_Elements_Count: Total count of distinct MGE features detected.
+5) MGE_Signatures: Semicolon-delimited list of identified elements.
+6) predicted_proteins.faa: Translated ORFs extracted by Prodigal.
+7) hmmer_results.tbl: Tabular output generated directly by HMMER.
