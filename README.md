@@ -18,7 +18,7 @@ Note: mges-scanner comes pre-packaged with a bundled HMM signature database (mge
 
 ## PART 2: HOW TO USE IT
 
-### Run mges-scanner on assembly contigs
+### Step 1: Run mges-scanner on assembly contigs
 
 Pass your input assemblies (.fasta, .fa, or .fna) to mges-scanner:
 ```bash
@@ -37,10 +37,9 @@ mges-scanner --input contigs.fasta --mge-db MGE_profiles.hmm --plsdb plsdb.dmnd 
 ```
 Note: You can adjust parameters and file paths according to your system environment.
 
-## Step 3: Look for the output files
+### Step 3: Look for the output files
 
 mges-scanner generates a single tab-delimited summary report (.tsv) containing mobility classifications for each analyzed contig:
-:
 
 1) Contig_ID: Identifier of the analyzed contig/assembly fragment.
 2) Detected_MGE_Signatures: Semicolon-delimited list of identified Pfam MGE signatures (or None).
