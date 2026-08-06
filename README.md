@@ -8,26 +8,27 @@ Mobile Genetic Element Profiler & Mobility Risk Scoring Engine for Genomes and M
 
 ## PART 1: INSTALLATION & SETUP
 
-### Step 1: Install MGEs-scanner
+### Install MGEs-scanner
 Install `mges-scanner` directly from GitHub using `pip3` in your Linux/WSL environment:
 
 ```bash
 pip3 install git+https://github.com/Resistome-lab/MGEs-scanner.git
 ```
-### Step 2: Install Prerequisites
-
-MGEs-scanner requires Prodigal, HMMER, and DIAMOND. Install them via Conda:
-```bash
-conda install -c bioconda prodigal hmmer diamond
-```
+Note: mges-scanner comes pre-packaged with a bundled HMM signature database (mge_signatures.hmm), so no additional database preparation, Conda packages, or profile downloads are required.
 
 ## PART 2: HOW TO USE IT
-### Step 1: Prepare your MGE HMM Database
 
-Prepare a concatenated HMM database file containing MGE profiles (e.g., ISfinder, INTEGRALL, Pfam MGEs):
+### Run mges-scanner on assembly contigs
+
+Pass your input assemblies (.fasta, .fa, or .fna) to mges-scanner:
 ```bash
-hmmpress MGE_profiles.hmm
+mges-scanner -i contigs.fasta -o mge_results.tsv
 ```
+You can also customize the E-value threshold:
+```bash
+mges-scanner --input contigs.fasta --output mge_results.tsv --evalue 1e-10
+```
+
 ### Step 2: Run MGEs-scanner on your assemblies/contigs
 
 To profile contigs (.fasta or .fa), pass your input assemblies and database paths to mges-scanner:
@@ -38,15 +39,12 @@ Note: You can adjust parameters and file paths according to your system environm
 
 ### Step 3: Look for the output files
 
-MGEs-scanner automatically generates results inside your specified output directory (--output-dir):
+## Step 3: Look for the output files
 
-### MGEs_mobility_summary.tsv: 
-Quantified mobility summary per contig/locus:
+mges-scanner generates a single tab-delimited summary report (.tsv) containing mobility classifications for each analyzed contig:
+:
 
-1) Contig_ID: Identifier of the analyzed contig.
-2) Mobility_Risk_Score: Calculated score from 0.0 to 10.0.
-3) Risk_Category: Categorized risk level (HIGH, MEDIUM, or LOW).
-4) Detected_Elements_Count: Total count of distinct MGE features detected.
-5) MGE_Signatures: Semicolon-delimited list of identified elements.
-6) predicted_proteins.faa: Translated ORFs extracted by Prodigal.
-7) hmmer_results.tbl: Tabular output generated directly by HMMER.
+1) Contig_ID: Identifier of the analyzed contig/assembly fragment.
+2) Detected_MGE_Signatures: Semicolon-delimited list of identified Pfam MGE signatures (or None).
+3) Mobility_Risk_Score: Quantitative Mobility Risk Score (0.5 to 8.5+).
+4) Risk_Tier: Categorized mobility risk level (HIGH, MEDIUM, or LOW).
